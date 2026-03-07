@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Quest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="stickers" id="stickers"></div>
+        </div>
+        
+        <div class="letter-display" id="letterDisplay"></div>
+        
+        <div class="feedback" id="feedback"></div>
+        
+        <div class="score">
+            <span id="successCount">0</span> / <span id="totalCount">0</span>
+        </div>
+        
+        <div class="controls">
+            <button id="toggleCase">Switch to Lowercase</button>
+        </div>
+    </div>
+    
+    <audio id="audioPlayer"></audio>
+    
+    <script src="game.js"></script>
+</body>
+</html>
