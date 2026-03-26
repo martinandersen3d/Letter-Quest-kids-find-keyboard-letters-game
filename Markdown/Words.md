@@ -189,6 +189,7 @@ Her er en liste med 200 korte ord på 2-3 bogstaver, som egner sig godt til et b
 178. Grin 😂
 179. Skrig 😱
 180. Hør 👂
+180. Glad 😊
 
 ### Diverse
 181. Ja ✅

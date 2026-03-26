@@ -112,7 +112,7 @@ class LetterQuest {
     }
     
     playAudio(character) {
-        const audioFile = `${character}.ogg`;
+        const audioFile = `./audio-alphabet/${character}.ogg`;
         this.audioPlayer.src = audioFile;
         this.audioPlayer.play().catch(err => {
             console.log('Audio playback failed:', err);
