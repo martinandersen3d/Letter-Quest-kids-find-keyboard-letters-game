@@ -37,3 +37,19 @@ But we still want to speak out the letter that is pressed for each letter in the
 When all the letters in the word have been pressed, a new word will be shown.
 Also from the JSON file, you can see that there is an emoji available for each word.
 We would like to show the emoji together with the word.
+When a word is shown the first letter is 100% visible, and the remaining letters is fifty percent visible. The Letter that has focus will always be hundred percent.
+A sticker is added after each word completed.
+- Should the case toggle still be needed for words? Words have mixed case (first letter capitalized)
+ - no, we will remove the toggle button funcitonality
+ 
+
+# Styling change For uppercase and lowercase:
+- The styling for the main letters is the same styling as the current CSS have implemented.They are always upper case, For all the letters in the word.
+- Below each uppercase letter is there a circle with the lowercase lower case equivalent.The circle is dark background with a bright text.And is half the size as the uppercase.
+- the letters that is 50% visible is also 50% desaturated
+Example.:
+```
+H O U S E
+h o u s e
+```
+- The word Audio file is played In the beginning when a word is shown, But not When the user have completed the word.
