@@ -6,7 +6,7 @@ class LetterQuest {
         this.vowels = ['a', 'e', 'i', 'o', 'u', 'y', 'æ', 'ø', 'å'];
         
         this.currentCharacter = null;
-        this.isUpperCase = true;
+        this.caseMode = 'both'; // 'both' | 'upper' | 'lower'
         this.successCount = 0;
         this.totalAttempts = 0;
         this.streakCount = 0;
@@ -37,19 +37,28 @@ class LetterQuest {
     }
     
     displayCharacter() {
-        const displayChar = this.isUpperCase ? 
-            this.currentCharacter.toUpperCase() : 
-            this.currentCharacter.toLowerCase();
-        
-        this.letterDisplay.textContent = displayChar;
         this.letterDisplay.className = 'letter-display';
-        
+
         if (this.vowels.includes(this.currentCharacter.toLowerCase())) {
             this.letterDisplay.classList.add('vowel');
         } else if (this.letters.includes(this.currentCharacter.toLowerCase())) {
             this.letterDisplay.classList.add('consonant');
         } else {
             this.letterDisplay.classList.add('number');
+        }
+
+        if (this.caseMode === 'both' && this.numbers.includes(this.currentCharacter)) {
+            this.letterDisplay.textContent = this.currentCharacter;
+        } else if (this.caseMode === 'both') {
+            this.letterDisplay.classList.add('both');
+            this.letterDisplay.innerHTML =
+                `<span>${this.currentCharacter.toUpperCase()}</span>` +
+                `<span>${this.currentCharacter.toLowerCase()}</span>`;
+        } else {
+            const displayChar = this.caseMode === 'upper'
+                ? this.currentCharacter.toUpperCase()
+                : this.currentCharacter.toLowerCase();
+            this.letterDisplay.textContent = displayChar;
         }
     }
     
@@ -171,10 +180,15 @@ class LetterQuest {
     }
     
     toggleCase() {
-        this.isUpperCase = !this.isUpperCase;
-        this.toggleCaseBtn.textContent = this.isUpperCase ? 
-            'Switch to Lowercase' : 
-            'Switch to Uppercase';
+        const cycle = { both: 'upper', upper: 'lower', lower: 'both' };
+        this.caseMode = cycle[this.caseMode];
+
+        const nextLabel = {
+            both:  'Switch to Uppercase only',
+            upper: 'Switch to Lowercase only',
+            lower: 'Switch to Uppercase & Lowercase'
+        };
+        this.toggleCaseBtn.textContent = nextLabel[this.caseMode];
         this.displayCharacter();
     }
 }
