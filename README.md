@@ -2,7 +2,7 @@
 
 An interactive educational game designed to help children learn letters and numbers through keyboard practice. Features audio feedback, progress tracking, and a reward system to keep learners engaged and motivated.
 
-![Letter Quest Screenshot](screenshot.png)
+![Letter Quest Screenshot](./Documentation/screenshot.png)
 
 ## Features
 
