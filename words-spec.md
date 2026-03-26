@@ -47,6 +47,7 @@ A sticker is added after each word completed.
 - The styling for the main letters is the same styling as the current CSS have implemented.They are always upper case, For all the letters in the word.
 - Below each uppercase letter is there a circle with the lowercase lower case equivalent.The circle is dark background with a bright text.And is half the size as the uppercase.
 - the letters that is 50% visible is also 50% desaturated
+- When the user presses a key, The audio letter is played immediately.But the CSS transition has to wait six hundred milliseconds before it fades to the next one.
 Example.:
 ```
 H O U S E

@@ -101,23 +101,27 @@ class WordsQuest {
         this.updateProgress();
 
         const tiles = this.wordDisplay.querySelectorAll('.letter-tile');
-        tiles[this.currentLetterIndex].classList.remove('active');
-        tiles[this.currentLetterIndex].classList.add('done');
+        const idx = this.currentLetterIndex;
 
-        this.currentLetterIndex++;
+        setTimeout(() => {
+            tiles[idx].classList.remove('active');
+            tiles[idx].classList.add('done');
 
-        if (this.currentLetterIndex >= entry.w.length) {
-            this.addSticker();
-            if (this.streakCount % 5 === 0) {
-                this.celebrate();
+            this.currentLetterIndex++;
+
+            if (this.currentLetterIndex >= entry.w.length) {
+                this.addSticker();
+                if (this.streakCount % 5 === 0) {
+                    this.celebrate();
+                }
+                setTimeout(() => {
+                    this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
+                    this.showWord();
+                }, 1000);
+            } else {
+                tiles[this.currentLetterIndex].classList.add('active');
             }
-            setTimeout(() => {
-                this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
-                this.showWord();
-            }, 1000);
-        } else {
-            tiles[this.currentLetterIndex].classList.add('active');
-        }
+        }, 600);
     }
 
     handleError() {
