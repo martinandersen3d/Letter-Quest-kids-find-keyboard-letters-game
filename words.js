@@ -107,8 +107,8 @@ class WordsQuest {
         this.currentLetterIndex++;
 
         if (this.currentLetterIndex >= entry.w.length) {
+            this.addSticker();
             if (this.streakCount % 5 === 0) {
-                this.addSticker();
                 this.celebrate();
             }
             setTimeout(() => {
