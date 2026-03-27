@@ -100,6 +100,16 @@ body {
     transform: scale(1.15);
 }
 
+.letter-tile.flash .letter-upper {
+    animation: letterFlash 0.5s ease forwards;
+}
+
+@keyframes letterFlash {
+    0%   { text-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+    30%  { text-shadow: 0 0 8px rgba(255,255,255,0.7), 0 0 20px rgba(255,255,255,0.7), 0 6px 20px rgba(0,0,0,0.3); }
+    100% { text-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+}
+
 /* Uppercase letter */
 .letter-upper {
     font-size: 7rem;

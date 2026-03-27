@@ -103,6 +103,9 @@ class WordsQuest {
         const tiles = this.wordDisplay.querySelectorAll('.letter-tile');
         const idx = this.currentLetterIndex;
 
+        tiles[idx].classList.add('flash');
+        setTimeout(() => tiles[idx].classList.remove('flash'), 500);
+
         setTimeout(() => {
             tiles[idx].classList.remove('active');
             tiles[idx].classList.add('done');
@@ -117,7 +120,7 @@ class WordsQuest {
                 setTimeout(() => {
                     this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
                     this.showWord();
-                }, 1000);
+                }, 1250);
             } else {
                 tiles[this.currentLetterIndex].classList.add('active');
             }

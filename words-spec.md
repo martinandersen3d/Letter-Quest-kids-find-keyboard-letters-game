@@ -48,6 +48,7 @@ A sticker is added after each word completed.
 - Below each uppercase letter is there a circle with the lowercase lower case equivalent.The circle is dark background with a bright text.And is half the size as the uppercase.
 - the letters that is 50% visible is also 50% desaturated
 - When the user presses a key, The audio letter is played immediately.But the CSS transition has to wait six hundred milliseconds before it fades to the next one.
+- Immediately when the key is pressed, then the active letter will have a short 500 ms fade-in-fade-out white text outline around the text.
 Example.:
 ```
 H O U S E
