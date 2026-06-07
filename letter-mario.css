@@ -51,6 +51,26 @@ body {
     transition: transform 0.15s ease, filter 0.2s ease;
 }
 
+#toggleCaseBtn {
+    border: none;
+    border-radius: 999px;
+    padding: 8px 16px;
+    background: #3f88ff;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.2s ease;
+}
+
+#toggleCaseBtn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+}
+
+#toggleCaseBtn:active {
+    transform: translateY(1px);
+}
+
 #restartBtn:hover {
     filter: brightness(1.05);
     transform: translateY(-1px);
@@ -238,18 +258,17 @@ body {
 
 .pickup {
     position: absolute;
-    width: 42px;
-    height: 42px;
+    width: 84px;
+    height: 84px;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 28%, #fff8a4 0%, #ffd84f 55%, #ffbc2f 100%);
-    border: 2px solid #d19400;
+    border: 3px solid #d19400;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #694000;
     font-weight: 900;
-    font-size: 1.1rem;
-    text-transform: uppercase;
+    font-size: 2.2rem;
     z-index: 7;
     box-shadow: 0 8px 20px rgba(193, 124, 0, 0.26);
     animation: floatY 1.4s ease-in-out infinite alternate;
@@ -260,8 +279,37 @@ body {
 }
 
 @keyframes floatY {
-    from { margin-top: -4px; }
-    to { margin-top: 4px; }
+    from { margin-top: -6px; }
+    to { margin-top: 6px; }
+}
+
+.pickup-preview {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    width: 140px;
+    height: 140px;
+    margin-left: -70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 28%, #fffbd3 0%, #ffe070 58%, #ffc842 100%);
+    border: 4px solid #cc9600;
+    color: #5f3d00;
+    font-size: 4rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 14px 30px rgba(30, 64, 84, 0.35);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 12;
+    pointer-events: none;
+}
+
+.pickup-preview.visible {
+    opacity: 1;
+    transform: scale(1);
 }
 
 @keyframes collectPop {

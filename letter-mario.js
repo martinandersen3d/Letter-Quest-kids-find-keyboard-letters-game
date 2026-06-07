@@ -13,7 +13,11 @@ class LetterMarioQuest {
         this.nextLetterEl = document.getElementById("nextLetter");
         this.statusTextEl = document.getElementById("statusText");
         this.restartBtn = document.getElementById("restartBtn");
+        this.toggleCaseBtn = document.getElementById("toggleCaseBtn");
         this.audioPlayer = document.getElementById("audioPlayer");
+        this.pickupPreviewEl = document.getElementById("pickupPreview");
+
+        this.caseMode = "lower";
 
         this.keys = {
             left: false,
@@ -21,12 +25,12 @@ class LetterMarioQuest {
         };
 
         this.world = {
-            width: 3600,
+            width: 7200,
             height: 0,
             groundY: 0,
             gravity: 2400,
             friction: 0.84,
-            maxSpeed: 360,
+            maxSpeed: 288,
             accel: 2200,
             jumpForce: 860,
             cameraX: 0
@@ -58,6 +62,14 @@ class LetterMarioQuest {
         window.addEventListener("resize", () => this.setupViewportMetrics());
 
         document.addEventListener("keydown", (event) => {
+            const target = event.target;
+            const isInteractiveTarget = target instanceof HTMLElement &&
+                (target.tagName === "BUTTON" || target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT");
+
+            if (isInteractiveTarget) {
+                return;
+            }
+
             const key = event.key.toLowerCase();
 
             if (key === "arrowleft" || key === "a") {
@@ -75,6 +87,11 @@ class LetterMarioQuest {
                 }
                 event.preventDefault();
             }
+
+            if (this.isFinished && (event.code === "Space" || event.code === "Enter")) {
+                this.restart();
+                event.preventDefault();
+            }
         });
 
         document.addEventListener("keyup", (event) => {
@@ -88,6 +105,7 @@ class LetterMarioQuest {
         });
 
         this.restartBtn.addEventListener("click", () => this.restart());
+        this.toggleCaseBtn.addEventListener("click", () => this.toggleCaseMode());
     }
 
     setupLevel() {
@@ -141,12 +159,13 @@ class LetterMarioQuest {
     createFences() {
         const fenceLayout = [
             { x: 510, width: 40, height: 80 },
-            { x: 880, width: 42, height: 96 },
-            { x: 1290, width: 44, height: 92 },
-            { x: 1760, width: 50, height: 105 },
-            { x: 2180, width: 52, height: 115 },
-            { x: 2640, width: 46, height: 95 },
-            { x: 3070, width: 55, height: 120 }
+            { x: 1020, width: 40, height: 80 },
+            { x: 1760, width: 42, height: 96 },
+            { x: 2580, width: 44, height: 92 },
+            { x: 3520, width: 50, height: 105 },
+            { x: 4360, width: 52, height: 115 },
+            { x: 5280, width: 46, height: 95 },
+            { x: 6140, width: 55, height: 120 }
         ];
 
         this.fences = fenceLayout.map((entry) => {
@@ -172,7 +191,8 @@ class LetterMarioQuest {
         const shuffled = [...this.DANISH_LETTERS].sort(() => Math.random() - 0.5);
 
         this.pickups = shuffled.map((letter, index) => {
-            const baseX = 220 + index * 112;
+            const pickupSize = 84;
+            const baseX = 240 + index * 230;
             let x = baseX + (index % 2 === 0 ? 14 : -14);
 
             for (const fence of this.fences) {
@@ -182,8 +202,8 @@ class LetterMarioQuest {
             }
 
             const tier = index % 3;
-            const baseY = this.world.groundY - 66;
-            const y = tier === 0 ? baseY : tier === 1 ? baseY - 58 : baseY - 100;
+            const baseY = this.world.groundY - pickupSize - 16;
+            const y = tier === 0 ? baseY : tier === 1 ? baseY - 70 : baseY - 130;
 
             const pickup = {
                 id: index,
@@ -191,14 +211,14 @@ class LetterMarioQuest {
                 audioLabel: letter.toLowerCase(),
                 x,
                 y,
-                width: 42,
-                height: 42,
+                width: pickupSize,
+                height: pickupSize,
                 collected: false
             };
 
             const el = document.createElement("div");
             el.className = "pickup";
-            el.textContent = letter;
+            el.textContent = this.formatLetter(letter);
             el.style.left = `${pickup.x}px`;
             el.style.top = `${pickup.y}px`;
             this.worldEl.appendChild(el);
@@ -336,6 +356,7 @@ class LetterMarioQuest {
             this.collectedCount += 1;
             this.collectedEl.textContent = String(this.collectedCount);
             this.statusTextEl.textContent = `Nice! You picked ${pickup.label}. Keep going.`;
+            this.showPickupPreview(pickup.label);
             this.playLetterAudio(pickup.audioLabel);
 
             const pickupEl = this.pickupEls.get(pickup.id);
@@ -354,7 +375,7 @@ class LetterMarioQuest {
 
     updateNextLetterLabel() {
         const next = this.pickups.find((pickup) => !pickup.collected);
-        this.nextLetterEl.textContent = next ? next.label : "Done";
+        this.nextLetterEl.textContent = next ? this.formatLetter(next.label) : "Done";
     }
 
     updateCamera() {
@@ -393,6 +414,23 @@ class LetterMarioQuest {
         });
     }
 
+    showPickupPreview(letter) {
+        if (!this.pickupPreviewEl) {
+            return;
+        }
+
+        this.pickupPreviewEl.textContent = this.formatLetter(letter);
+        this.pickupPreviewEl.classList.add("visible");
+
+        if (this.pickupPreviewTimeout) {
+            clearTimeout(this.pickupPreviewTimeout);
+        }
+
+        this.pickupPreviewTimeout = setTimeout(() => {
+            this.pickupPreviewEl.classList.remove("visible");
+        }, 2500);
+    }
+
     winGame() {
         this.isFinished = true;
         this.player.vx = 0;
@@ -416,6 +454,7 @@ class LetterMarioQuest {
         const playAgainBtn = document.getElementById("playAgainBtn");
         if (playAgainBtn) {
             playAgainBtn.addEventListener("click", () => this.restart());
+            playAgainBtn.focus();
         }
     }
 
@@ -429,6 +468,36 @@ class LetterMarioQuest {
     restart() {
         this.lastFrame = 0;
         this.setupLevel();
+    }
+
+    toggleCaseMode() {
+        this.caseMode = this.caseMode === "lower" ? "upper" : "lower";
+
+        if (this.toggleCaseBtn) {
+            this.toggleCaseBtn.textContent = this.caseMode === "lower"
+                ? "Switch to UPPERCASE"
+                : "Switch to lowercase";
+        }
+
+        this.refreshPickupLetterDisplay();
+        this.updateNextLetterLabel();
+    }
+
+    refreshPickupLetterDisplay() {
+        for (const pickup of this.pickups) {
+            if (pickup.collected) {
+                continue;
+            }
+
+            const pickupEl = this.pickupEls.get(pickup.id);
+            if (pickupEl) {
+                pickupEl.textContent = this.formatLetter(pickup.label);
+            }
+        }
+    }
+
+    formatLetter(letter) {
+        return this.caseMode === "lower" ? letter.toLowerCase() : letter.toUpperCase();
     }
 }
 
