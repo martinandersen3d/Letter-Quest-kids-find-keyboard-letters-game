@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Mario Quest</title>
+    <link rel="stylesheet" href="letter-mario.css">
+</head>
+<body>
+    <div class="page">
+        <header class="hud">
+            <div class="hud-item">Collected: <span id="collectedCount">0</span>/<span id="totalCount">29</span></div>
+            <div class="hud-item">Next: <span id="nextLetter">A</span></div>
+            <button id="restartBtn" type="button">Restart</button>
+        </header>
+
+        <main class="game-shell">
+            <div class="game-viewport" id="gameViewport" aria-label="Letter Mario game area">
+                <div class="world" id="world">
+                    <div class="sky-decor cloud cloud-a"></div>
+                    <div class="sky-decor cloud cloud-b"></div>
+                    <div class="sky-decor hill hill-a"></div>
+                    <div class="sky-decor hill hill-b"></div>
+                    <div class="ground" id="ground"></div>
+                    <div class="player" id="player" aria-label="Player"></div>
+                </div>
+                <div class="hint">Move with Arrow keys or A/D. Jump with Space.</div>
+            </div>
+
+            <section class="status-panel" id="statusPanel">
+                <p id="statusText">Collect all Danish letters from A-Z plus Æ, Ø, Å.</p>
+            </section>
+        </main>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+    <script src="letter-mario.js"></script>
+</body>
+</html>
