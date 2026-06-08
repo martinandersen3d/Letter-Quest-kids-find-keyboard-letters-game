@@ -1,0 +1,227 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-a: #42a5f5;
+    --bg-b: #5e35b1;
+    --panel-bg: rgba(255, 255, 255, 0.16);
+    --text: #ffffff;
+    --ok: #a5d6a7;
+    --error: #ffab91;
+    --focus: #ffeb3b;
+}
+
+body {
+    font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 100%);
+    color: var(--text);
+    padding: 18px;
+}
+
+.game {
+    width: min(980px, 100%);
+    display: grid;
+    gap: 16px;
+}
+
+.top-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.panel,
+.bottom-panel {
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.panel-title {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.prompt-card {
+    width: 100%;
+    min-height: 260px;
+    border: none;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #2d4da8;
+    font-size: clamp(4.5rem, 8vw, 7rem);
+    cursor: default;
+    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.choices {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.choice-card {
+    min-height: 260px;
+    border: none;
+    border-radius: 18px;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    background: rgba(255, 255, 255, 0.94);
+    color: #1f3f93;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.choice-card:hover,
+.choice-card:focus-visible {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+    outline: 4px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.choice-card.correct {
+    background: #dcedc8;
+}
+
+.choice-card.wrong {
+    background: #ffcdd2;
+    animation: shake 0.35s ease;
+}
+
+.bottom-panel {
+    display: grid;
+    gap: 10px;
+}
+
+.track-head,
+.track-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.feedback {
+    min-height: 30px;
+    font-size: 1.35rem;
+}
+
+.feedback.ok {
+    color: var(--ok);
+}
+
+.feedback.error {
+    color: var(--error);
+}
+
+.score,
+.step-info {
+    font-size: 1.1rem;
+}
+
+.track {
+    position: relative;
+    height: 88px;
+}
+
+.track-line {
+    position: absolute;
+    top: 50%;
+    left: 48px;
+    right: 48px;
+    height: 12px;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.32);
+}
+
+.track-start,
+.track-end,
+.ship {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+}
+
+.track-start {
+    left: 6px;
+}
+
+.track-end {
+    right: 6px;
+}
+
+.ship {
+    left: 48px;
+    transition: left 0.35s ease;
+}
+
+.stickers {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sticker {
+    font-size: 1.6rem;
+    animation: pop-in 0.35s ease;
+}
+
+.restart-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #234099;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.restart-btn:hover,
+.restart-btn:focus-visible {
+    outline: 3px solid var(--focus);
+}
+
+@keyframes shake {
+    0%,
+    100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+@media (max-width: 900px) {
+    .top-panels {
+        grid-template-columns: 1fr;
+    }
+
+    .choice-card,
+    .prompt-card {
+        min-height: 160px;
+    }
+
+    .choices {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter Matching</title>
+    <link rel="stylesheet" href="letter-matching.css">
+</head>
+<body>
+    <main class="game" aria-label="Letter matching game">
+        <section class="top-panels">
+            <article class="panel prompt-panel" aria-label="Prompt letter">
+                <h2 class="panel-title">Match This</h2>
+                <button id="promptCard" class="prompt-card" type="button" aria-label="Prompt uppercase letter"></button>
+            </article>
+
+            <article class="panel choices-panel" aria-label="Lowercase choices">
+                <h2 class="panel-title">Pick The Lowercase</h2>
+                <div class="choices" id="choices"></div>
+            </article>
+        </section>
+
+        <section class="bottom-panel" aria-label="Progress track">
+            <div class="track-head">
+                <div class="feedback" id="feedback" aria-live="polite"></div>
+                <div class="score"><span id="correctCount">0</span> / <span id="attemptCount">0</span></div>
+            </div>
+
+            <div class="track" id="track">
+                <div class="track-line"></div>
+                <div class="track-start" aria-hidden="true">🚢</div>
+                <div class="track-end" aria-hidden="true">🏠</div>
+                <div class="ship" id="ship" aria-hidden="true">⛵</div>
+            </div>
+
+            <div class="track-foot">
+                <div class="step-info">Step <span id="stepCount">0</span> / <span id="stepGoal">10</span></div>
+                <div class="stickers" id="stickers" aria-label="Earned stickers"></div>
+                <button id="restartBtn" class="restart-btn" type="button">Restart</button>
+            </div>
+        </section>
+    </main>
+
+    <audio id="audioPlayer"></audio>
+
+    <script src="letter-matching.js"></script>
+</body>
+</html>
