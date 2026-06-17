@@ -179,7 +179,12 @@ h1 {
 }
 
 .card.pair-flash .face {
-    animation: pair-found-flash 0.42s ease-in-out 2;
+    animation: pair-found-flash 0.9s ease-in-out 1;
+}
+
+.card.pair-flash .card-center {
+    animation: pair-symbol-pop 0.9s ease-in-out;
+    transform-origin: center;
 }
 
 .game-footer {
@@ -506,6 +511,16 @@ h1 {
             0 0 0 4px rgba(93, 193, 255, 0.4),
             0 0 18px rgba(93, 193, 255, 0.58);
         filter: brightness(1.2);
+    }
+}
+
+@keyframes pair-symbol-pop {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
     }
 }
 

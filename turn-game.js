@@ -61,6 +61,9 @@ class TurnGame {
         this.recentMonkeyGifs = [];
         this.feedbackAutoplayTimers = [];
         this.feedbackAutoplayStopped = false;
+        this.flipAnimationDurationMs = 520;
+        this.audioDelayMs = 300;
+        this.audioPlayTimeout = null;
 
         this.init();
     }
@@ -305,11 +308,19 @@ class TurnGame {
         const symbolB = this.secondCard.dataset.symbol;
 
         if (symbolA === symbolB) {
-            this.flashMatchedPair(this.firstCard, this.secondCard);
-            this.markMatched(this.firstCard);
-            this.markMatched(this.secondCard);
+            const firstMatchedCard = this.firstCard;
+            const secondMatchedCard = this.secondCard;
+
+            this.markMatched(firstMatchedCard);
+            this.markMatched(secondMatchedCard);
             this.matchesFound += 1;
             this.setStatus(`Flot! Du fandt parret '${symbolA}'.`);
+
+            // Wait until both cards have visually completed the flip, then flash together.
+            setTimeout(() => {
+                this.flashMatchedPair(firstMatchedCard, secondMatchedCard);
+            }, this.flipAnimationDurationMs);
+
             this.resetTurn();
             this.checkWin();
             return;
@@ -340,7 +351,14 @@ class TurnGame {
 
         cards.forEach((card) => {
             card.classList.remove("pair-flash");
-            void card.offsetWidth;
+        });
+
+        // Force one reflow before adding class back so both animations restart in sync.
+        if (cards.length > 0) {
+            void cards[0].offsetWidth;
+        }
+
+        cards.forEach((card) => {
             card.classList.add("pair-flash");
 
             setTimeout(() => {
@@ -544,11 +562,19 @@ class TurnGame {
             return;
         }
 
-        this.audioPlayer.src = `./audio-alphabet/${symbol}.ogg`;
-        this.audioPlayer.currentTime = 0;
-        this.audioPlayer.play().catch((error) => {
-            console.log("Audio playback failed:", error);
-        });
+        if (this.audioPlayTimeout) {
+            clearTimeout(this.audioPlayTimeout);
+            this.audioPlayTimeout = null;
+        }
+
+        this.audioPlayTimeout = setTimeout(() => {
+            this.audioPlayTimeout = null;
+            this.audioPlayer.src = `./audio-alphabet/${symbol}.ogg`;
+            this.audioPlayer.currentTime = 0;
+            this.audioPlayer.play().catch((error) => {
+                console.log("Audio playback failed:", error);
+            });
+        }, this.audioDelayMs);
     }
 }
 
