@@ -27,6 +27,20 @@ const MONKEY_GIFS = [
 class TurnGame {
     constructor() {
         this.letterPool = "abcdefghijklmnopqrstuvwxyzæøå".split("");
+        this.vowelPool = ["a", "e", "i", "o", "u", "y", "æ", "ø", "å"];
+        this.letterWeightBoost = {
+            a: 0.4,
+            e: 0.4,
+            i: 0.4,
+            o: 0.4,
+            ø: 0.4,
+            m: 0.2,
+            s: 0.2,
+            p: 0.1,
+            l: 0.1,
+            f: 0.1,
+            t: 0.1
+        };
         this.boardEl = document.getElementById("board");
         this.statusText = document.getElementById("statusText");
         this.restartButton = document.getElementById("restartButton");
@@ -44,6 +58,7 @@ class TurnGame {
         this.confettiTimeout = null;
         this.winPopupTimeout = null;
         this.roundLetters = [];
+        this.recentMonkeyGifs = [];
 
         this.init();
     }
@@ -71,7 +86,10 @@ class TurnGame {
     }
 
     createDeck() {
-        const pickedLetters = this.pickUnique(this.letterPool, 4);
+        const vowelLetter = this.pickUnique(this.vowelPool, 1)[0];
+        const nonVowelPool = this.letterPool.filter((letter) => letter !== vowelLetter);
+        const otherLetters = this.pickWeightedUnique(nonVowelPool, 3);
+        const pickedLetters = this.shuffle([vowelLetter, ...otherLetters]);
         const pickedEmojis = this.pickUnique(KID_FRIENDLY_EMOJIS, 2);
         const symbols = [...pickedLetters, ...pickedEmojis];
         this.roundLetters = [...pickedLetters];
@@ -97,6 +115,40 @@ class TurnGame {
         }
 
         return picked;
+    }
+
+    pickWeightedUnique(pool, count) {
+        const picked = [];
+        const available = [...pool];
+
+        while (picked.length < count && available.length > 0) {
+            const totalWeight = available.reduce(
+                (sum, letter) => sum + this.getLetterWeight(letter),
+                0
+            );
+
+            let randomWeight = Math.random() * totalWeight;
+            let selectedIndex = 0;
+
+            for (let i = 0; i < available.length; i += 1) {
+                randomWeight -= this.getLetterWeight(available[i]);
+                if (randomWeight <= 0) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+
+            const [selected] = available.splice(selectedIndex, 1);
+            picked.push(selected);
+        }
+
+        return picked;
+    }
+
+    getLetterWeight(letter) {
+        const baseWeight = 1;
+        const boost = this.letterWeightBoost[letter] || 0;
+        return baseWeight + boost;
     }
 
     shuffle(items) {
@@ -198,6 +250,7 @@ class TurnGame {
         const symbolB = this.secondCard.dataset.symbol;
 
         if (symbolA === symbolB) {
+            this.flashMatchedPair(this.firstCard, this.secondCard);
             this.markMatched(this.firstCard);
             this.markMatched(this.secondCard);
             this.matchesFound += 1;
@@ -212,7 +265,7 @@ class TurnGame {
             this.flipBack(this.firstCard);
             this.flipBack(this.secondCard);
             this.resetTurn();
-        }, 800);
+        }, 1100);
     }
 
     markMatched(cardButton) {
@@ -223,6 +276,22 @@ class TurnGame {
         cardButton.dataset.matched = "true";
         cardButton.disabled = true;
         cardButton.setAttribute("aria-label", "Matched letter card");
+    }
+
+    flashMatchedPair(firstCardButton, secondCardButton) {
+        const cards = [firstCardButton, secondCardButton]
+            .map((button) => button?.querySelector(".card"))
+            .filter(Boolean);
+
+        cards.forEach((card) => {
+            card.classList.remove("pair-flash");
+            void card.offsetWidth;
+            card.classList.add("pair-flash");
+
+            setTimeout(() => {
+                card.classList.remove("pair-flash");
+            }, 900);
+        });
     }
 
     flipBack(cardButton) {
@@ -300,8 +369,20 @@ class TurnGame {
             return;
         }
 
-        const randomIndex = Math.floor(Math.random() * MONKEY_GIFS.length);
-        this.winMonkeyImage.src = MONKEY_GIFS[randomIndex];
+        const availableGifs = MONKEY_GIFS.filter(
+            (gifPath) => !this.recentMonkeyGifs.includes(gifPath)
+        );
+
+        const sourcePool = availableGifs.length > 0 ? availableGifs : MONKEY_GIFS;
+        const randomIndex = Math.floor(Math.random() * sourcePool.length);
+        const selectedGif = sourcePool[randomIndex];
+
+        this.winMonkeyImage.src = selectedGif;
+
+        this.recentMonkeyGifs.push(selectedGif);
+        if (this.recentMonkeyGifs.length > 3) {
+            this.recentMonkeyGifs.shift();
+        }
     }
 
     hideWinPopup() {

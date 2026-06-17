@@ -55,6 +55,8 @@ h1 {
     letter-spacing: 1px;
     text-transform: uppercase;
     margin-bottom: 4px;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .subtitle {
@@ -174,6 +176,10 @@ h1 {
 .card.matched .back .face-inner {
     color: var(--accent);
     box-shadow: inset 0 0 0 2px rgba(43, 140, 127, 0.25);
+}
+
+.card.pair-flash .face {
+    animation: pair-found-flash 0.42s ease-in-out 2;
 }
 
 .game-footer {
@@ -464,6 +470,21 @@ h1 {
     }
     50% {
         transform: scale(1.08) rotate(2deg);
+    }
+}
+
+@keyframes pair-found-flash {
+    0%,
+    100% {
+        filter: brightness(1);
+        box-shadow: 0 8px 14px rgba(67, 45, 27, 0.23);
+    }
+    50% {
+        filter: brightness(1.25);
+        box-shadow:
+            0 8px 14px rgba(67, 45, 27, 0.23),
+            0 0 0 5px rgba(255, 224, 95, 0.55),
+            0 0 24px rgba(255, 196, 61, 0.75);
     }
 }
 
