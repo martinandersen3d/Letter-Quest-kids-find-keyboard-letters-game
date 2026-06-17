@@ -90,8 +90,13 @@ class TurnGame {
 
     createDeck() {
         const vowelLetter = this.pickUnique(this.vowelPool, 1)[0];
-        const nonVowelPool = this.letterPool.filter((letter) => letter !== vowelLetter);
-        const otherLetters = this.pickWeightedUnique(nonVowelPool, 3);
+        const remainingLetterPool = this.letterPool.filter((letter) => letter !== vowelLetter);
+        const otherLetters = this.pickWeightedUniqueWithVowelLimit(
+            remainingLetterPool,
+            3,
+            1,
+            2
+        );
         const pickedLetters = this.shuffle([vowelLetter, ...otherLetters]);
         const pickedEmojis = this.pickUnique(KID_FRIENDLY_EMOJIS, 2);
         const symbols = [...pickedLetters, ...pickedEmojis];
@@ -143,6 +148,53 @@ class TurnGame {
 
             const [selected] = available.splice(selectedIndex, 1);
             picked.push(selected);
+        }
+
+        return picked;
+    }
+
+    pickWeightedUniqueWithVowelLimit(pool, count, startingVowelCount, maxVowels) {
+        const picked = [];
+        const available = [...pool];
+        let currentVowelCount = startingVowelCount;
+
+        while (picked.length < count && available.length > 0) {
+            const validCandidates = available.filter((letter) => {
+                if (!this.vowelPool.includes(letter)) {
+                    return true;
+                }
+                return currentVowelCount < maxVowels;
+            });
+
+            if (validCandidates.length === 0) {
+                break;
+            }
+
+            const totalWeight = validCandidates.reduce(
+                (sum, letter) => sum + this.getLetterWeight(letter),
+                0
+            );
+
+            let randomWeight = Math.random() * totalWeight;
+            let selected = validCandidates[0];
+
+            for (let i = 0; i < validCandidates.length; i += 1) {
+                randomWeight -= this.getLetterWeight(validCandidates[i]);
+                if (randomWeight <= 0) {
+                    selected = validCandidates[i];
+                    break;
+                }
+            }
+
+            picked.push(selected);
+            const selectedIndex = available.indexOf(selected);
+            if (selectedIndex >= 0) {
+                available.splice(selectedIndex, 1);
+            }
+
+            if (this.vowelPool.includes(selected)) {
+                currentVowelCount += 1;
+            }
         }
 
         return picked;

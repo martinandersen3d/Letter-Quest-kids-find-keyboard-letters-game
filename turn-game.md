@@ -22,6 +22,7 @@ A child-friendly memory card game (vendespil) focused on early letter recognitio
 - Vowel guarantee rule:
   - At least one of the 4 letter pairs must be a vowel from:
   - `a, e, i, o, u, y, æ, ø, å`
+  - Maximum 2 vowels are allowed among the 4 selected letters in a round.
 - Weighted letter priority rule:
   - `a`, `e`, `i`, `o`, `ø` have +40% weight.
   - `m`, `s` have +20% weight.
