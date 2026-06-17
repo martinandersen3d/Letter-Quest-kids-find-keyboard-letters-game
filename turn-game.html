@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Letter VendeSpil</title>
+	<link rel="stylesheet" href="turn-game.css">
+</head>
+<body>
+	<main class="game-shell">
+		<section class="game-board-panel" aria-label="Letter memory game">
+			<h1>VendeSpil</h1>
+
+			<div class="board" id="board"></div>
+
+			<div class="game-footer">
+				<button class="restart-btn" id="restartButton" type="button">Nyt spil</button>
+			</div>
+		</section>
+	</main>
+
+	<div class="win-overlay" id="winOverlay" aria-hidden="true">
+		<div class="win-popup" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+			<h2 id="winTitle">Mega flot!</h2>
+			<div class="win-medal" aria-hidden="true">
+				<span class="medal-ribbon medal-ribbon-left"></span>
+				<span class="medal-ribbon medal-ribbon-right"></span>
+				<span class="medal-center">🏅</span>
+			</div>
+			<p>Du fandt alle par!</p>
+			<p class="win-sub">Klar til et nyt spil?</p>
+			<button class="start-round-btn" id="winStartButton" type="button">Start</button>
+		</div>
+		<div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+	</div>
+
+	<audio id="audioPlayer" preload="none"></audio>
+	<script src="turn-game.js"></script>
+</body>
+</html>
