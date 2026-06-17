@@ -33,6 +33,7 @@ class TurnGame {
         this.winOverlay = document.getElementById("winOverlay");
         this.winStartButton = document.getElementById("winStartButton");
         this.winMonkeyImage = document.getElementById("winMonkeyImage");
+        this.letterFeedbackRow = document.getElementById("letterFeedbackRow");
         this.confettiLayer = document.getElementById("confettiLayer");
         this.audioPlayer = document.getElementById("audioPlayer");
 
@@ -42,6 +43,7 @@ class TurnGame {
         this.matchesFound = 0;
         this.confettiTimeout = null;
         this.winPopupTimeout = null;
+        this.roundLetters = [];
 
         this.init();
     }
@@ -72,6 +74,7 @@ class TurnGame {
         const pickedLetters = this.pickUnique(this.letterPool, 4);
         const pickedEmojis = this.pickUnique(KID_FRIENDLY_EMOJIS, 2);
         const symbols = [...pickedLetters, ...pickedEmojis];
+        this.roundLetters = [...pickedLetters];
 
         const pairDeck = [...symbols, ...symbols].map((symbol, index) => ({
             id: `${index}-${symbol}`,
@@ -255,10 +258,41 @@ class TurnGame {
 
     showWinPopup() {
         this.setRandomMonkeyGif();
+        this.renderLetterFeedbackRow();
         this.winOverlay.classList.add("show");
         this.winOverlay.setAttribute("aria-hidden", "false");
         this.winStartButton.focus();
         this.launchConfetti();
+    }
+
+    renderLetterFeedbackRow() {
+        if (!this.letterFeedbackRow) {
+            return;
+        }
+
+        this.letterFeedbackRow.innerHTML = "";
+
+        this.roundLetters.forEach((letter) => {
+            const letterButton = document.createElement("button");
+            letterButton.type = "button";
+            letterButton.className = "feedback-letter-btn";
+            letterButton.textContent = letter;
+            letterButton.setAttribute("aria-label", `Play letter ${letter}`);
+
+            letterButton.addEventListener("mouseenter", () => {
+                this.playLetterAudio(letter, false);
+            });
+
+            letterButton.addEventListener("focus", () => {
+                this.playLetterAudio(letter, false);
+            });
+
+            letterButton.addEventListener("click", () => {
+                this.playLetterAudio(letter, false);
+            });
+
+            this.letterFeedbackRow.appendChild(letterButton);
+        });
     }
 
     setRandomMonkeyGif() {

@@ -352,6 +352,39 @@ h1 {
     box-shadow: 0 8px 16px rgba(51, 31, 20, 0.22);
 }
 
+.letter-feedback-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(56px, 1fr));
+    gap: 10px;
+    width: min(100%, 340px);
+    margin: 0 auto 18px;
+}
+
+.feedback-letter-btn {
+    border: 2px solid rgba(78, 59, 47, 0.25);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fffdf9, #f4ebde);
+    color: var(--card-face-text);
+    font-size: clamp(1.5rem, 4.8vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1;
+    text-transform: lowercase;
+    min-height: 58px;
+    cursor: pointer;
+    box-shadow: 0 5px 10px rgba(67, 45, 27, 0.18);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.feedback-letter-btn:hover,
+.feedback-letter-btn:focus-visible {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 9px 16px rgba(67, 45, 27, 0.28);
+}
+
+.feedback-letter-btn:active {
+    transform: translateY(1px);
+}
+
 .win-popup p {
     font-size: clamp(1rem, 2.8vw, 1.3rem);
     color: #6a503f;
