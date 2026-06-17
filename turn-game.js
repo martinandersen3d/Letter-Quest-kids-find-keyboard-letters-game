@@ -59,6 +59,8 @@ class TurnGame {
         this.winPopupTimeout = null;
         this.roundLetters = [];
         this.recentMonkeyGifs = [];
+        this.feedbackAutoplayTimers = [];
+        this.feedbackAutoplayStopped = false;
 
         this.init();
     }
@@ -74,6 +76,7 @@ class TurnGame {
             clearTimeout(this.winPopupTimeout);
             this.winPopupTimeout = null;
         }
+        this.stopFeedbackAutoplay();
         this.hideWinPopup();
         this.firstCard = null;
         this.secondCard = null;
@@ -332,6 +335,7 @@ class TurnGame {
         this.winOverlay.setAttribute("aria-hidden", "false");
         this.winStartButton.focus();
         this.launchConfetti();
+        this.startFeedbackAutoplay();
     }
 
     renderLetterFeedbackRow() {
@@ -346,9 +350,11 @@ class TurnGame {
             letterButton.type = "button";
             letterButton.className = "feedback-letter-btn";
             letterButton.textContent = letter;
+            letterButton.dataset.letter = letter;
             letterButton.setAttribute("aria-label", `Play letter ${letter}`);
 
             letterButton.addEventListener("mouseenter", () => {
+                this.stopFeedbackAutoplay();
                 this.playLetterAudio(letter, false);
             });
 
@@ -362,6 +368,65 @@ class TurnGame {
 
             this.letterFeedbackRow.appendChild(letterButton);
         });
+    }
+
+    startFeedbackAutoplay() {
+        this.stopFeedbackAutoplay();
+        this.feedbackAutoplayStopped = false;
+
+        if (!this.letterFeedbackRow) {
+            return;
+        }
+
+        const buttons = Array.from(this.letterFeedbackRow.querySelectorAll(".feedback-letter-btn"));
+        if (buttons.length === 0) {
+            return;
+        }
+
+        const runStep = (index) => {
+            if (this.feedbackAutoplayStopped || index >= buttons.length) {
+                return;
+            }
+
+            const button = buttons[index];
+            const letter = button.dataset.letter;
+            this.flashFeedbackLetter(button);
+            this.playLetterAudio(letter, false);
+
+            const nextTimer = setTimeout(() => {
+                runStep(index + 1);
+            }, 2000);
+            this.feedbackAutoplayTimers.push(nextTimer);
+        };
+
+        const startTimer = setTimeout(() => {
+            runStep(0);
+        }, 2000);
+        this.feedbackAutoplayTimers.push(startTimer);
+    }
+
+    stopFeedbackAutoplay() {
+        this.feedbackAutoplayStopped = true;
+        this.feedbackAutoplayTimers.forEach((timerId) => clearTimeout(timerId));
+        this.feedbackAutoplayTimers = [];
+
+        if (!this.letterFeedbackRow) {
+            return;
+        }
+
+        const flashingButtons = this.letterFeedbackRow.querySelectorAll(".feedback-letter-btn.auto-flash");
+        flashingButtons.forEach((button) => button.classList.remove("auto-flash"));
+    }
+
+    flashFeedbackLetter(button) {
+        button.classList.remove("auto-flash");
+        void button.offsetWidth;
+        button.classList.add("auto-flash");
+
+        const cleanupTimer = setTimeout(() => {
+            button.classList.remove("auto-flash");
+        }, 620);
+        this.feedbackAutoplayTimers.push(cleanupTimer);
     }
 
     setRandomMonkeyGif() {
@@ -388,6 +453,7 @@ class TurnGame {
     hideWinPopup() {
         this.winOverlay.classList.remove("show");
         this.winOverlay.setAttribute("aria-hidden", "true");
+        this.stopFeedbackAutoplay();
         this.clearConfetti();
     }
 

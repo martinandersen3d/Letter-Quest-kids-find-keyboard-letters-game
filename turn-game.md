@@ -38,6 +38,12 @@ A child-friendly memory card game (vendespil) focused on early letter recognitio
 - Win popup includes a 4-square letter feedback row:
   - Displays the exact 4 letters used in that round.
   - Hover/focus/click on each square replays the corresponding letter audio.
+  - Autoplay sequence starts after popup opens:
+    - Wait 2000 ms.
+    - Flash first letter square and play sound.
+    - Wait 2000 ms and continue to next letter.
+    - Continue until all 4 letters are played.
+  - If user hovers a letter square, autoplay is interrupted completely and hover input takes over.
 
 ## Win and Celebration Rules
 - Win condition:
