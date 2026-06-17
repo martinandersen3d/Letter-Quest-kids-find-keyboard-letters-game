@@ -9,6 +9,21 @@ const KID_FRIENDLY_EMOJIS = [
     "🎮", "🕹️", "🚗", "🏎️", "🏍️", "🚂", "🚀", "🛸", "🤖", "🧲"
 ];
 
+const MONKEY_GIFS = [
+    "./img/monkey1.gif",
+    "./img/monkey2.gif",
+    "./img/monkey3.gif",
+    "./img/monkey4.gif",
+    "./img/monkey5.gif",
+    "./img/monkey6.gif",
+    "./img/monkey7.gif",
+    "./img/monkey8.gif",
+    "./img/monkey9.gif",
+    "./img/monkey10.gif",
+    "./img/monkey11.gif",
+    "./img/monkey12.gif"
+];
+
 class TurnGame {
     constructor() {
         this.letterPool = "abcdefghijklmnopqrstuvwxyzæøå".split("");
@@ -17,6 +32,7 @@ class TurnGame {
         this.restartButton = document.getElementById("restartButton");
         this.winOverlay = document.getElementById("winOverlay");
         this.winStartButton = document.getElementById("winStartButton");
+        this.winMonkeyImage = document.getElementById("winMonkeyImage");
         this.confettiLayer = document.getElementById("confettiLayer");
         this.audioPlayer = document.getElementById("audioPlayer");
 
@@ -25,6 +41,7 @@ class TurnGame {
         this.isResolving = false;
         this.matchesFound = 0;
         this.confettiTimeout = null;
+        this.winPopupTimeout = null;
 
         this.init();
     }
@@ -36,6 +53,10 @@ class TurnGame {
     }
 
     startNewGame() {
+        if (this.winPopupTimeout) {
+            clearTimeout(this.winPopupTimeout);
+            this.winPopupTimeout = null;
+        }
         this.hideWinPopup();
         this.firstCard = null;
         this.secondCard = null;
@@ -219,7 +240,10 @@ class TurnGame {
     checkWin() {
         if (this.matchesFound >= 6) {
             this.setStatus("Mega flot! Alle par fundet. Tryk Nyt spil.");
-            this.showWinPopup();
+            this.winPopupTimeout = setTimeout(() => {
+                this.winPopupTimeout = null;
+                this.showWinPopup();
+            }, 900);
         }
     }
 
@@ -230,10 +254,20 @@ class TurnGame {
     }
 
     showWinPopup() {
+        this.setRandomMonkeyGif();
         this.winOverlay.classList.add("show");
         this.winOverlay.setAttribute("aria-hidden", "false");
         this.winStartButton.focus();
         this.launchConfetti();
+    }
+
+    setRandomMonkeyGif() {
+        if (!this.winMonkeyImage) {
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * MONKEY_GIFS.length);
+        this.winMonkeyImage.src = MONKEY_GIFS[randomIndex];
     }
 
     hideWinPopup() {
