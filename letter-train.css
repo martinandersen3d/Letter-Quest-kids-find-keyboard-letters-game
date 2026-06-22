@@ -93,10 +93,10 @@ body {
     top: 52%;
     transform: translate(-50%, -50%);
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 10px;
     justify-content: center;
-    max-width: 86%;
+    max-width: none;
     z-index: 8;
 }
 
@@ -165,12 +165,19 @@ body {
     -webkit-user-select: none;
     user-select: none;
     touch-action: none;
-    transition: transform 0.12s ease;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
     z-index: 4;
 }
 
 .letter-token:hover {
-    transform: scale(1.08);
+    transform: translate(-50%, -50%) scale(1.14);
+    box-shadow: 0 12px 24px #2f567455, 0 0 0 5px #ffffffa8;
+    filter: saturate(1.08);
+}
+
+.letter-token:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px #ffffff, 0 0 0 8px #1aa6b7;
 }
 
 .letter-token:active {

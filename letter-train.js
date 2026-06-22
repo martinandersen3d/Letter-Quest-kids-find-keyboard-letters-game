@@ -14,6 +14,12 @@ class LetterTrainGame {
         this.followingTokenId = null;
         this.hoveredDropSlot = null;
         this.draggingTokenId = null;
+        this.touchDrag = {
+            tokenId: null,
+            pointerId: null,
+            active: false
+        };
+        this.suppressNextClickTokenId = null;
         this.lastPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
         this.hoverAudioByKey = new Map();
@@ -92,6 +98,18 @@ class LetterTrainGame {
         document.addEventListener("mousemove", (event) => {
             this.lastPointer = { x: event.clientX, y: event.clientY };
             this.updateFollowingTokenPosition();
+        });
+
+        document.addEventListener("pointermove", (event) => {
+            this.handleTouchDragMove(event);
+        });
+
+        document.addEventListener("pointerup", (event) => {
+            this.handleTouchDragEnd(event);
+        });
+
+        document.addEventListener("pointercancel", (event) => {
+            this.handleTouchDragEnd(event);
         });
 
         document.addEventListener("click", (event) => {
@@ -200,6 +218,32 @@ class LetterTrainGame {
                 this.playLetterAudio(letter, `hover-${tokenId}`);
             });
 
+            token.addEventListener("pointerdown", (event) => {
+                if (event.pointerType !== "touch" || this.isTokenPlaced(tokenId)) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                this.lastPointer = { x: event.clientX, y: event.clientY };
+                this.playLetterAudio(letter, `touch-${tokenId}`);
+
+                if (this.followingTokenId) {
+                    this.cancelFollowMode();
+                }
+
+                this.touchDrag.tokenId = tokenId;
+                this.touchDrag.pointerId = event.pointerId;
+                this.touchDrag.active = true;
+
+                token.classList.add("following");
+                token.style.left = `${event.clientX}px`;
+                token.style.top = `${event.clientY}px`;
+
+                const slot = this.getSlotFromPoint(event.clientX, event.clientY);
+                this.setHoveredDropSlot(slot);
+            });
+
             token.addEventListener("dragstart", (event) => {
                 if (this.isTokenPlaced(tokenId)) {
                     event.preventDefault();
@@ -215,6 +259,11 @@ class LetterTrainGame {
 
             token.addEventListener("click", (event) => {
                 event.stopPropagation();
+
+                if (this.suppressNextClickTokenId === tokenId) {
+                    this.suppressNextClickTokenId = null;
+                    return;
+                }
 
                 if (this.isTokenPlaced(tokenId)) {
                     return;
@@ -238,13 +287,53 @@ class LetterTrainGame {
 
     layoutUnplacedTokens() {
         const arenaRect = this.arena.getBoundingClientRect();
-        const centerX = arenaRect.width / 2;
-        const centerY = arenaRect.height * 0.62;
-        const radiusX = Math.min(arenaRect.width * 0.42, 360);
-        const radiusY = Math.min(arenaRect.height * 0.24, 145);
-
         const freeTokenIds = Array.from(this.tokensById.keys()).filter((tokenId) => !this.isTokenPlaced(tokenId));
         const total = freeTokenIds.length || 1;
+        const isMobileLayout = window.matchMedia("(max-width: 720px)").matches;
+        const targetRect = this.targetWord.getBoundingClientRect();
+        const tokenRef = freeTokenIds.length ? this.tokensById.get(freeTokenIds[0]) : null;
+        const tokenSize = tokenRef
+            ? parseFloat(getComputedStyle(tokenRef).width) || 64
+            : 64;
+        const gapX = Math.max(10, tokenSize * 0.22);
+        const gapY = Math.max(10, tokenSize * 0.2);
+        const contentWidth = Math.max(1, arenaRect.width - 24);
+        const cols = Math.max(2, Math.min(total, Math.floor(contentWidth / (tokenSize + gapX))));
+        const rows = Math.ceil(total / cols);
+        const blockWidth = cols * tokenSize + (cols - 1) * gapX;
+        const blockHeight = rows * tokenSize + (rows - 1) * gapY;
+        const startX = (arenaRect.width - blockWidth) / 2 + tokenSize / 2;
+
+        if (isMobileLayout) {
+            const maxTop = Math.max(14, targetRect.top - arenaRect.top - blockHeight - 10);
+            const topY = Math.min(Math.max(14, maxTop), arenaRect.height - blockHeight - 14);
+
+            freeTokenIds.forEach((tokenId, idx) => {
+                if (this.followingTokenId === tokenId) {
+                    return;
+                }
+
+                const token = this.tokensById.get(tokenId);
+                const row = Math.floor(idx / cols);
+                const col = idx % cols;
+                const x = startX + col * (tokenSize + gapX);
+                const y = topY + tokenSize / 2 + row * (tokenSize + gapY);
+
+                token.style.left = `${x}px`;
+                token.style.top = `${y}px`;
+                token.style.transform = "translate(-50%, -50%)";
+
+                token.dataset.anchorLeft = token.style.left;
+                token.dataset.anchorTop = token.style.top;
+                token.dataset.anchorTransform = token.style.transform;
+            });
+
+            return;
+        }
+
+        const belowSlotsY = targetRect.bottom - arenaRect.top + tokenSize * 0.85;
+        const maxTop = arenaRect.height - blockHeight - 14;
+        const topY = Math.min(Math.max(belowSlotsY, 14), maxTop);
 
         freeTokenIds.forEach((tokenId, idx) => {
             if (this.followingTokenId === tokenId) {
@@ -252,9 +341,12 @@ class LetterTrainGame {
             }
 
             const token = this.tokensById.get(tokenId);
-            const angle = (idx / total) * (Math.PI * 2);
-            const x = centerX + Math.cos(angle) * radiusX;
-            const y = centerY + Math.sin(angle) * radiusY;
+            const row = Math.floor(idx / cols);
+            const col = idx % cols;
+            const jitterX = this.getStableJitter(tokenId, "x") * Math.min(16, tokenSize * 0.18);
+            const jitterY = this.getStableJitter(tokenId, "y") * Math.min(10, tokenSize * 0.12);
+            const x = startX + col * (tokenSize + gapX) + jitterX;
+            const y = topY + tokenSize / 2 + row * (tokenSize + gapY) + jitterY;
 
             token.style.left = `${x}px`;
             token.style.top = `${y}px`;
@@ -281,6 +373,65 @@ class LetterTrainGame {
         token.style.top = `${this.lastPointer.y}px`;
     }
 
+    handleTouchDragMove(event) {
+        if (!this.touchDrag.active || this.touchDrag.pointerId !== event.pointerId) {
+            return;
+        }
+
+        const token = this.tokensById.get(this.touchDrag.tokenId);
+        if (!token || this.isTokenPlaced(this.touchDrag.tokenId)) {
+            this.clearTouchDrag();
+            return;
+        }
+
+        this.lastPointer = { x: event.clientX, y: event.clientY };
+        token.style.left = `${event.clientX}px`;
+        token.style.top = `${event.clientY}px`;
+
+        const slot = this.getSlotFromPoint(event.clientX, event.clientY);
+        this.setHoveredDropSlot(slot);
+    }
+
+    handleTouchDragEnd(event) {
+        if (!this.touchDrag.active || this.touchDrag.pointerId !== event.pointerId) {
+            return;
+        }
+
+        const tokenId = this.touchDrag.tokenId;
+        const token = this.tokensById.get(tokenId);
+        const slot = this.getSlotFromPoint(event.clientX, event.clientY);
+
+        this.setHoveredDropSlot(null);
+        this.clearTouchDrag();
+
+        if (!token || this.isTokenPlaced(tokenId)) {
+            return;
+        }
+
+        token.classList.remove("following");
+
+        if (!slot) {
+            token.style.left = token.dataset.anchorLeft || token.style.left;
+            token.style.top = token.dataset.anchorTop || token.style.top;
+            token.style.transform = token.dataset.anchorTransform || "translate(-50%, -50%)";
+            this.suppressNextClickTokenId = tokenId;
+            return;
+        }
+
+        const slotIndex = Number(slot.dataset.index);
+        if (!Number.isNaN(slotIndex)) {
+            this.tryPlaceToken(tokenId, slotIndex);
+        }
+
+        this.suppressNextClickTokenId = tokenId;
+    }
+
+    clearTouchDrag() {
+        this.touchDrag.tokenId = null;
+        this.touchDrag.pointerId = null;
+        this.touchDrag.active = false;
+    }
+
     tryPlaceToken(tokenId, slotIndex) {
         const token = this.tokensById.get(tokenId);
         const slot = this.targetWord.querySelector(`.word-slot[data-index="${slotIndex}"]`);
@@ -292,6 +443,7 @@ class LetterTrainGame {
         if (slot.querySelector(".letter-token")) {
             this.setFeedback("That spot is already filled.", "error");
             this.bumpSlot(slot);
+            this.restoreTokenAfterFailedDrop(tokenId, token);
             return;
         }
 
@@ -305,7 +457,7 @@ class LetterTrainGame {
             this.setFeedback("Try another spot.", "error");
             this.playErrorSound();
             this.bumpSlot(slot);
-            this.cancelFollowMode();
+            this.restoreTokenAfterFailedDrop(tokenId, token);
             return;
         }
 
@@ -328,6 +480,22 @@ class LetterTrainGame {
             this.onWordSolved();
             return;
         }
+    }
+
+    restoreTokenAfterFailedDrop(tokenId, token) {
+        if (!token) {
+            return;
+        }
+
+        if (this.followingTokenId === tokenId) {
+            this.cancelFollowMode();
+            return;
+        }
+
+        token.classList.remove("following");
+        token.style.left = token.dataset.anchorLeft || token.style.left;
+        token.style.top = token.dataset.anchorTop || token.style.top;
+        token.style.transform = token.dataset.anchorTransform || "translate(-50%, -50%)";
     }
 
     onWordSolved() {
@@ -397,6 +565,18 @@ class LetterTrainGame {
             }
         }
         return null;
+    }
+
+    getStableJitter(tokenId, axis) {
+        let hash = axis === "x" ? 17 : 29;
+        const key = `${tokenId}:${this.roundTokenIdSeed}:${axis}`;
+        for (let i = 0; i < key.length; i += 1) {
+            hash = ((hash << 5) - hash) + key.charCodeAt(i);
+            hash |= 0;
+        }
+
+        const normalized = (Math.abs(hash) % 1000) / 999;
+        return (normalized * 2) - 1;
     }
 
     setFeedback(message, type) {
