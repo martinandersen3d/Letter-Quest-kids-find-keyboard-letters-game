@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Letter Train</title>
+	<link rel="stylesheet" href="letter-train.css">
+</head>
+<body>
+	<main class="game" aria-label="Letter Train game">
+		<header class="topbar">
+			<h1>Letter Train</h1>
+			<div class="scoreboard">
+				<span>Words: <strong id="solvedCount">0</strong></span>
+				<span>Tries: <strong id="attemptCount">0</strong></span>
+			</div>
+		</header>
+
+		<section class="instructions" aria-live="polite">
+			<p id="instructionText">Drag a letter to the matching spot, or click a letter then click its spot.</p>
+		</section>
+
+		<section class="arena" id="arena" aria-label="Word and letters">
+			<div class="emoji" id="emojiDisplay" aria-hidden="true"></div>
+			<div class="target-word" id="targetWord" aria-label="Target word"></div>
+			<div class="letter-bank" id="letterBank" aria-label="Available letters"></div>
+		</section>
+
+		<footer class="controls">
+			<button id="playWordBtn" type="button">Play Word</button>
+			<button id="nextWordBtn" type="button">Next Word</button>
+			<div class="feedback" id="feedback" aria-live="polite"></div>
+		</footer>
+	</main>
+
+	<audio id="audioPlayer"></audio>
+
+	<script src="disable-right-click.js"></script>
+	<script src="letter-train.js"></script>
+</body>
+</html>
