@@ -330,6 +330,50 @@ body {
     z-index: 9;
 }
 
+.mobile-controls {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    display: none;
+    gap: 14px;
+    z-index: 14;
+    pointer-events: auto;
+}
+
+.control-btn {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    border: 3px solid rgba(24, 53, 69, 0.45);
+    background: radial-gradient(circle at 28% 25%, #ffffff 0%, #dceef9 68%, #bddbea 100%);
+    color: #1c435c;
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 18px rgba(20, 45, 62, 0.33);
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.control-btn:active {
+    transform: scale(0.96);
+}
+
+.control-btn.is-pressed {
+    background: radial-gradient(circle at 28% 25%, #f7fdff 0%, #c4e4f4 68%, #a9d3e6 100%);
+    box-shadow: 0 4px 10px rgba(20, 45, 62, 0.35);
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .mobile-controls {
+        display: flex;
+    }
+}
+
 .status-panel {
     background: rgba(255, 255, 255, 0.86);
     border-radius: 12px;
@@ -384,19 +428,63 @@ body {
 
 @media (max-width: 800px) {
     body {
-        padding: 10px;
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .page {
+        width: 100%;
+        min-height: 100vh;
+        gap: 0;
     }
 
     .hud {
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        z-index: 24;
         flex-wrap: wrap;
         justify-content: center;
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    .status-panel {
+        position: fixed;
+        top: 94px;
+        left: 8px;
+        right: 8px;
+        z-index: 23;
+        min-height: 0;
+        padding: 8px 10px;
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    .game-shell {
+        min-height: 100vh;
     }
 
     .game-viewport {
-        height: min(72vh, 420px);
+        height: 100dvh;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .mobile-controls {
+        display: flex;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
     }
 
     .hint {
         font-size: 0.8rem;
+        top: 148px;
+        bottom: auto;
+        background: rgba(255, 255, 255, 0.7);
+        z-index: 22;
+    }
+
+    .pickup-preview {
+        top: 210px;
     }
 }

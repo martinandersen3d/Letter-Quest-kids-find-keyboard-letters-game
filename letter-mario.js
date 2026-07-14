@@ -16,6 +16,9 @@ class LetterMarioQuest {
         this.toggleCaseBtn = document.getElementById("toggleCaseBtn");
         this.audioPlayer = document.getElementById("audioPlayer");
         this.pickupPreviewEl = document.getElementById("pickupPreview");
+        this.moveLeftBtn = document.getElementById("moveLeftBtn");
+        this.jumpBtn = document.getElementById("jumpBtn");
+        this.moveRightBtn = document.getElementById("moveRightBtn");
 
         this.caseMode = "lower";
 
@@ -60,6 +63,7 @@ class LetterMarioQuest {
 
     bindEvents() {
         window.addEventListener("resize", () => this.setupViewportMetrics());
+        window.addEventListener("blur", () => this.clearMovementKeys());
 
         document.addEventListener("keydown", (event) => {
             const target = event.target;
@@ -81,10 +85,7 @@ class LetterMarioQuest {
                 event.preventDefault();
             }
             if (event.code === "Space") {
-                if (this.player.grounded && !this.isFinished) {
-                    this.player.vy = -this.world.jumpForce;
-                    this.player.grounded = false;
-                }
+                this.tryJump();
                 event.preventDefault();
             }
 
@@ -106,6 +107,70 @@ class LetterMarioQuest {
 
         this.restartBtn.addEventListener("click", () => this.restart());
         this.toggleCaseBtn.addEventListener("click", () => this.toggleCaseMode());
+        this.bindMobileControls();
+    }
+
+    bindMobileControls() {
+        const bindHold = (button, direction) => {
+            if (!button) {
+                return;
+            }
+
+            const setPressedState = (isPressed) => {
+                this.keys[direction] = isPressed;
+                button.classList.toggle("is-pressed", isPressed);
+            };
+
+            button.addEventListener("pointerdown", (event) => {
+                event.preventDefault();
+                setPressedState(true);
+            });
+
+            const release = () => setPressedState(false);
+            button.addEventListener("pointerup", release);
+            button.addEventListener("pointercancel", release);
+            button.addEventListener("pointerleave", release);
+        };
+
+        bindHold(this.moveLeftBtn, "left");
+        bindHold(this.moveRightBtn, "right");
+
+        if (this.jumpBtn) {
+            this.jumpBtn.addEventListener("pointerdown", (event) => {
+                event.preventDefault();
+                this.jumpBtn.classList.add("is-pressed");
+                this.tryJump();
+            });
+
+            const releaseJump = () => this.jumpBtn.classList.remove("is-pressed");
+            this.jumpBtn.addEventListener("pointerup", releaseJump);
+            this.jumpBtn.addEventListener("pointercancel", releaseJump);
+            this.jumpBtn.addEventListener("pointerleave", releaseJump);
+        }
+    }
+
+    clearMovementKeys() {
+        this.keys.left = false;
+        this.keys.right = false;
+
+        if (this.moveLeftBtn) {
+            this.moveLeftBtn.classList.remove("is-pressed");
+        }
+
+        if (this.moveRightBtn) {
+            this.moveRightBtn.classList.remove("is-pressed");
+        }
+
+        if (this.jumpBtn) {
+            this.jumpBtn.classList.remove("is-pressed");
+        }
+    }
+
+    tryJump() {
+        if (this.player.grounded && !this.isFinished) {
+            this.player.vy = -this.world.jumpForce;
+            this.player.grounded = false;
+        }
     }
 
     setupLevel() {
@@ -467,6 +532,7 @@ class LetterMarioQuest {
 
     restart() {
         this.lastFrame = 0;
+        this.clearMovementKeys();
         this.setupLevel();
     }
 
