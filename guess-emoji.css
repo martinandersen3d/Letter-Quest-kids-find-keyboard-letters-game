@@ -26,14 +26,8 @@ body {
 }
 
 .game {
-    width: min(980px, 100%);
+    width: min(680px, 100%);
     display: grid;
-    gap: 16px;
-}
-
-.top-panels {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
 
@@ -53,53 +47,91 @@ body {
     text-align: center;
 }
 
-.prompt-card {
+/* ── Letter card ── */
+.letter-card {
     width: 100%;
-    min-height: 260px;
+    min-height: 160px;
     border: none;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.88);
     color: #2d4da8;
-    font-size: clamp(4.5rem, 8vw, 7rem);
-    cursor: default;
-    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-}
-
-.choices {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
-.choice-card {
-    min-height: 260px;
-    border: none;
-    border-radius: 18px;
-    font-size: clamp(3.5rem, 6vw, 6rem);
-    background: rgba(255, 255, 255, 0.94);
-    color: #1f3f93;
     cursor: pointer;
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15em;
+    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
-.choice-card:hover,
-.choice-card:focus-visible {
-    transform: translateY(-3px) scale(1.02);
+.letter-card:hover,
+.letter-card:focus-visible {
+    transform: translateY(-2px) scale(1.01);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
     outline: 4px solid var(--focus);
     outline-offset: 2px;
 }
 
-.choice-card.correct {
+.letter-upper {
+    font-size: clamp(4rem, 12vw, 7rem);
+    line-height: 1;
+}
+
+.letter-lower {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 1;
+    opacity: 0.7;
+}
+
+/* ── Emoji choices ── */
+.emoji-choices {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.emoji-card {
+    min-height: 130px;
+    border: none;
+    border-radius: 18px;
+    font-size: clamp(3rem, 8vw, 5rem);
+    background: rgba(255, 255, 255, 0.94);
+    color: #1f3f93;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.emoji-card:hover,
+.emoji-card:focus-visible {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+    outline: 4px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.emoji-card.correct {
     background: #dcedc8;
 }
 
-.choice-card.wrong {
+.emoji-card.wrong {
     background: #ffcdd2;
     animation: shake 0.35s ease;
 }
 
+.emoji-label {
+    font-size: clamp(0.7rem, 2.5vw, 1rem);
+    color: #2d4da8;
+    font-weight: bold;
+}
+
+/* ── Bottom panel ── */
 .bottom-panel {
     display: grid;
     gap: 4px;
@@ -119,13 +151,8 @@ body {
     font-size: 1rem;
 }
 
-.feedback.ok {
-    color: var(--ok);
-}
-
-.feedback.error {
-    color: var(--error);
-}
+.feedback.ok  { color: var(--ok); }
+.feedback.error { color: var(--error); }
 
 .score,
 .step-info {
@@ -157,13 +184,8 @@ body {
     font-size: 2rem;
 }
 
-.track-start {
-    left: 6px;
-}
-
-.track-end {
-    right: 6px;
-}
+.track-start { left: 6px; }
+.track-end   { right: 6px; }
 
 .ship {
     left: 48px;
@@ -199,29 +221,23 @@ body {
 }
 
 @keyframes shake {
-    0%,
-    100% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    75% { transform: translateX(6px); }
+    0%,   100% { transform: translateX(0); }
+    25%         { transform: translateX(-6px); }
+    75%         { transform: translateX(6px); }
 }
 
 @keyframes pop-in {
-    0% { transform: scale(0); }
-    70% { transform: scale(1.2); }
+    0%   { transform: scale(0); }
+    70%  { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
 
-@media (max-width: 900px) {
-    .top-panels {
-        grid-template-columns: 1fr;
+@media (max-width: 600px) {
+    .letter-card {
+        min-height: 110px;
     }
 
-    .choice-card,
-    .prompt-card {
+    .emoji-card {
         min-height: 90px;
-    }
-
-    .choices {
-        grid-template-columns: 1fr;
     }
 }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gæt Emoji</title>
+    <link rel="stylesheet" href="guess-emoji.css">
+</head>
+<body>
+    <main class="game" aria-label="Gæt emoji bogstav-spil">
+
+        <section class="panel letter-panel" aria-label="Bogstav">
+            <h2 class="panel-title">Hvilket bogstav starter emojien med?</h2>
+            <button id="letterBtn" class="letter-card" type="button" aria-label="Tryk for at høre bogstavet"></button>
+        </section>
+
+        <section class="panel emoji-panel" aria-label="Vælg emoji">
+            <div class="emoji-choices" id="emojiChoices"></div>
+        </section>
+
+        <section class="bottom-panel" aria-label="Fremskridt">
+            <div class="track-head">
+                <div class="feedback" id="feedback" aria-live="polite"></div>
+                <div class="score"><span id="correctCount">0</span> / <span id="attemptCount">0</span></div>
+            </div>
+
+            <div class="track" id="track">
+                <div class="track-line"></div>
+                <div class="track-start" aria-hidden="true">🚢</div>
+                <div class="track-end" aria-hidden="true">🏠</div>
+                <div class="ship" id="ship" aria-hidden="true">⛵</div>
+            </div>
+
+            <div class="track-foot">
+                <div class="step-info">Trin <span id="stepCount">0</span> / <span id="stepGoal">10</span></div>
+                <div class="stickers" id="stickers" aria-label="Optjente klistermærker"></div>
+                <button id="restartBtn" class="restart-btn" type="button">Start forfra</button>
+            </div>
+        </section>
+
+    </main>
+
+    <audio id="audioPlayer"></audio>
+
+    <script src="disable-right-click.js"></script>
+    <script src="guess-emoji.js"></script>
+</body>
+</html>
