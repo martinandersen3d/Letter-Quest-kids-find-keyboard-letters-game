@@ -1,0 +1,205 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-a: #42a5f5;
+    --bg-b: #5e35b1;
+    --key-letter: #ffffff;
+    --key-letter-text: #2d4da8;
+    --key-number: #fff9c4;
+    --key-number-text: #5d4037;
+    --key-danish: #e1bee7;
+    --key-danish-text: #6a1b9a;
+    --focus: #ffeb3b;
+    --shadow: rgba(0, 0, 0, 0.25);
+}
+
+body {
+    font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 100%);
+    color: #ffffff;
+    padding: 25px 12px 24px;
+}
+
+.page {
+    width: min(900px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.title {
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    letter-spacing: 0.04em;
+}
+
+/* ── Keyboard ── */
+.keyboard {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 24px;
+    padding: 18px 14px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.kb-row--home {
+    padding-left: clamp(0px, 3%, 28px);
+}
+
+.kb-row--bottom {
+    padding-left: clamp(0px, 8%, 64px);
+}
+
+/* ── Keys ── */
+.key {
+    flex: 1 1 0;
+    max-width: 80px;
+    aspect-ratio: 1 / 1;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: clamp(1rem, 3.5vw, 1.8rem);
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--shadow), 0 6px 12px var(--shadow);
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.key:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--shadow);
+}
+
+.key:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.key--letter {
+    background: var(--key-letter);
+    color: var(--key-letter-text);
+}
+
+.key--letter:hover {
+    background: #e8eeff;
+}
+
+.key--number {
+    background: var(--key-number);
+    color: var(--key-number-text);
+}
+
+.key--number:hover {
+    background: #fff59d;
+}
+
+.key--danish {
+    background: var(--key-danish);
+    color: var(--key-danish-text);
+}
+
+.key--danish:hover {
+    background: #ce93d8;
+}
+
+.key.pressed {
+    background: #ffeb3b !important;
+    color: #333 !important;
+}
+
+.key--shift {
+    flex: 0 0 auto;
+    width: auto;
+    aspect-ratio: unset;
+    padding: 0 24px;
+    height: 52px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    border-radius: 12px;
+    letter-spacing: 0.02em;
+}
+
+.key--shift:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.key--shift.active {
+    background: #ffeb3b;
+    color: #333;
+}
+
+/* ── Display ── */
+.display-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.display {
+    min-width: 120px;
+    min-height: 120px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(4rem, 18vw, 8rem);
+    font-weight: bold;
+    color: #2d4da8;
+    transition: transform 0.12s ease;
+}
+
+.display.pop {
+    animation: key-pop 0.25s ease;
+}
+
+@keyframes key-pop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+    .kb-row {
+        gap: 5px;
+    }
+
+    .keyboard {
+        padding: 12px 8px;
+        gap: 6px;
+    }
+
+    .key {
+        border-radius: 8px;
+    }
+
+    .display {
+        min-width: 90px;
+        min-height: 90px;
+    }
+}

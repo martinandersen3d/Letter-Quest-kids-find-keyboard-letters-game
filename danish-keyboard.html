@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dansk Tastatur</title>
+    <link rel="stylesheet" href="danish-keyboard.css">
+</head>
+<body>
+    <main class="page">
+        <h1 class="title">Dansk Tastatur</h1>
+
+        <div class="keyboard" id="keyboard" aria-label="Dansk tastatur">
+
+            <!-- Numbers row -->
+            <div class="kb-row">
+                <button class="key key--number" data-char="1" data-audio="numbers/1.ogg">1</button>
+                <button class="key key--number" data-char="2" data-audio="numbers/2.ogg">2</button>
+                <button class="key key--number" data-char="3" data-audio="numbers/3.ogg">3</button>
+                <button class="key key--number" data-char="4" data-audio="numbers/4.ogg">4</button>
+                <button class="key key--number" data-char="5" data-audio="numbers/5.ogg">5</button>
+                <button class="key key--number" data-char="6" data-audio="numbers/6.ogg">6</button>
+                <button class="key key--number" data-char="7" data-audio="numbers/7.ogg">7</button>
+                <button class="key key--number" data-char="8" data-audio="numbers/8.ogg">8</button>
+                <button class="key key--number" data-char="9" data-audio="numbers/9.ogg">9</button>
+                <button class="key key--number" data-char="0" data-audio="numbers/0.ogg">0</button>
+            </div>
+
+            <!-- QWERTY row -->
+            <div class="kb-row">
+                <button class="key key--letter" data-char="Q" data-audio="alphabet/q.ogg">q</button>
+                <button class="key key--letter" data-char="W" data-audio="alphabet/w.ogg">w</button>
+                <button class="key key--letter" data-char="E" data-audio="alphabet/e.ogg">e</button>
+                <button class="key key--letter" data-char="R" data-audio="alphabet/r.ogg">r</button>
+                <button class="key key--letter" data-char="T" data-audio="alphabet/t.ogg">t</button>
+                <button class="key key--letter" data-char="Y" data-audio="alphabet/y.ogg">y</button>
+                <button class="key key--letter" data-char="U" data-audio="alphabet/u.ogg">u</button>
+                <button class="key key--letter" data-char="I" data-audio="alphabet/i.ogg">i</button>
+                <button class="key key--letter" data-char="O" data-audio="alphabet/o.ogg">o</button>
+                <button class="key key--letter" data-char="P" data-audio="alphabet/p.ogg">p</button>
+                <button class="key key--letter key--danish" data-char="Å" data-audio="alphabet/å.ogg">å</button>
+            </div>
+
+            <!-- Home row -->
+            <div class="kb-row kb-row--home">
+                <button class="key key--letter" data-char="A" data-audio="alphabet/a.ogg">a</button>
+                <button class="key key--letter" data-char="S" data-audio="alphabet/s.ogg">s</button>
+                <button class="key key--letter" data-char="D" data-audio="alphabet/d.ogg">d</button>
+                <button class="key key--letter" data-char="F" data-audio="alphabet/f.ogg">f</button>
+                <button class="key key--letter" data-char="G" data-audio="alphabet/g.ogg">g</button>
+                <button class="key key--letter" data-char="H" data-audio="alphabet/h.ogg">h</button>
+                <button class="key key--letter" data-char="J" data-audio="alphabet/j.ogg">j</button>
+                <button class="key key--letter" data-char="K" data-audio="alphabet/k.ogg">k</button>
+                <button class="key key--letter" data-char="L" data-audio="alphabet/l.ogg">l</button>
+                <button class="key key--letter key--danish" data-char="Æ" data-audio="alphabet/æ.ogg">æ</button>
+                <button class="key key--letter key--danish" data-char="Ø" data-audio="alphabet/ø.ogg">ø</button>
+            </div>
+
+            <!-- Bottom row -->
+            <div class="kb-row kb-row--bottom">
+                <button class="key key--letter" data-char="Z" data-audio="alphabet/z.ogg">z</button>
+                <button class="key key--letter" data-char="X" data-audio="alphabet/x.ogg">x</button>
+                <button class="key key--letter" data-char="C" data-audio="alphabet/c.ogg">c</button>
+                <button class="key key--letter" data-char="V" data-audio="alphabet/v.ogg">v</button>
+                <button class="key key--letter" data-char="B" data-audio="alphabet/b.ogg">b</button>
+                <button class="key key--letter" data-char="N" data-audio="alphabet/n.ogg">n</button>
+                <button class="key key--letter" data-char="M" data-audio="alphabet/m.ogg">m</button>
+            </div>
+
+            <!-- Case toggle row -->
+            <div class="kb-row kb-row--controls">
+                <button class="key key--shift" id="caseToggle" aria-pressed="false">⇧ Store bogstaver</button>
+            </div>
+
+        </div>
+
+        <div class="display-wrap">
+            <div class="display" id="display" aria-live="polite" aria-label="Senest trykkede tast"></div>
+        </div>
+    </main>
+
+    <audio id="audioPlayer"></audio>
+
+    <script src="disable-right-click.js"></script>
+    <script src="danish-keyboard.js"></script>
+</body>
+</html>
