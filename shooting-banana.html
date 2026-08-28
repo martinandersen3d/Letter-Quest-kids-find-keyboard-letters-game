@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Skyd Bananen</title>
+    <link rel="stylesheet" href="shooting-banana.css">
+</head>
+<body>
+    <main class="page">
+
+        <header class="target-bar">
+            <span class="target-label">Skyd bogstavet:</span>
+            <span class="target-letter" id="targetLetter"></span>
+            <button class="hear-btn" id="hearBtn" type="button" aria-label="Hør bogstavet">🔊</button>
+        </header>
+
+        <div class="game-area" id="gameArea">
+            <div class="shooter" id="shooter">🍌</div>
+        </div>
+
+        <div class="bottom-bar">
+            <div class="score-row">
+                <span class="feedback" id="feedback" aria-live="polite"></span>
+                <span class="score" id="score">0 / 0</span>
+            </div>
+            <button class="shoot-btn" id="shootBtn" type="button">💥 SKYD!</button>
+        </div>
+
+    </main>
+
+    <audio id="audioPlayer"></audio>
+    <script src="disable-right-click.js"></script>
+    <script src="shooting-banana.js"></script>
+</body>
+</html>
+c

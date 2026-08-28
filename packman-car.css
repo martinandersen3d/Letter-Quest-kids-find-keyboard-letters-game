@@ -100,15 +100,17 @@ body {
     width: min(46px, 13vw);
     height: min(46px, 13vw);
     border-radius: 50%;
-    background: #ffd700;
     border: 3px solid #111;
-    color: #111;
+    color: #fff;
     font-size: min(20px, 5.5vw);
     font-weight: bold;
     box-shadow: 0 3px 10px rgba(0,0,0,0.5);
     animation: pop-in 0.2s ease;
     user-select: none;
 }
+
+.item-letter--correct { background: #1b5e20; }
+.item-letter--wrong   { background: #b71c1c; }
 
 .item-tractor {
     font-size: min(34px, 9.5vw);

@@ -90,6 +90,7 @@ class PackmanCarGame {
     handleWrong(item) {
         item.state = "exploding";
         this.setFeedback("Ups! Prøv igen!");
+        this.playAudio(item.char);
         this.playErrorSound();
         this.render();
 
@@ -132,7 +133,7 @@ class PackmanCarGame {
                 span.className   = "item-explosion";
                 span.textContent = Math.random() > 0.5 ? "💥" : "🔥";
             } else if (item.state === "alive") {
-                span.className   = "item-letter";
+                span.className   = `item-letter item-letter--${item.isCorrect ? "correct" : "wrong"}`;
                 span.textContent = item.char;
             }
 

@@ -1,0 +1,222 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --yellow: #ffe135;
+    --yellow-dark: #f0a500;
+    --green: #3cb371;
+    --green-dark: #1a5c35;
+    --sky: #64c8f0;
+    --sky-dark: #2a8fbf;
+    --text-light: #fff;
+}
+
+body {
+    font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, var(--sky) 0%, var(--sky-dark) 100%);
+    color: var(--text-light);
+    overflow: hidden;
+    user-select: none;
+}
+
+/* ── Page shell ── */
+.page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ── Target bar ── */
+.target-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
+}
+
+.target-label {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    opacity: 0.9;
+}
+
+.target-letter {
+    font-size: clamp(2.4rem, 12vw, 3.5rem);
+    font-weight: 900;
+    color: var(--yellow);
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+    line-height: 1;
+    min-width: 1.4ch;
+    text-align: center;
+}
+
+.hear-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, background 0.2s;
+}
+.hear-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.35); }
+
+/* ── Game area ── */
+.game-area {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg,
+            #87ceeb 0%,
+            #b0e0ff 70%,
+            #5dab5d 70%,
+            #3a7d3a 100%
+        );
+    border-bottom: 4px solid var(--green-dark);
+}
+
+/* ── Floating letters ── */
+.letter-bubble {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: #1a3a6b;
+    font-size: 2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transform: translate(-50%, -50%);
+    transition: background 0.15s, transform 0.15s;
+    pointer-events: none;
+    will-change: transform, top, left;
+}
+
+.letter-bubble.hit-correct {
+    background: #4cff72;
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow: 0 0 30px #4cff72;
+}
+
+.letter-bubble.hit-wrong {
+    background: #ff4c4c;
+    transform: translate(-50%, -50%) scale(0.85);
+}
+
+/* ── Banana shooter (sits at bottom-center of game area) ── */
+.shooter {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 3rem;
+    line-height: 1;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));
+    pointer-events: none;
+    animation: shooterWiggle 2s ease-in-out infinite;
+}
+
+@keyframes shooterWiggle {
+    0%, 100% { transform: translateX(-50%) rotate(-8deg); }
+    50%       { transform: translateX(-50%) rotate(8deg); }
+}
+
+/* ── Banana projectile ── */
+.banana-projectile {
+    position: absolute;
+    font-size: 2.2rem;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: spinBanana 0.25s linear infinite;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+    will-change: top;
+}
+
+@keyframes spinBanana {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ── Bottom bar ── */
+.bottom-bar {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px 16px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 1.6rem;
+}
+
+.feedback {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-weight: 700;
+    flex: 1;
+}
+
+.score {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-weight: 700;
+    color: var(--yellow);
+}
+
+/* ── Shoot button ── */
+.shoot-btn {
+    width: 100%;
+    max-width: 340px;
+    padding: 18px 0;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--yellow) 0%, var(--yellow-dark) 100%);
+    color: #1a3a00;
+    font-family: inherit;
+    font-size: clamp(1.4rem, 6vw, 1.9rem);
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #8a5a00, 0 8px 20px rgba(0,0,0,0.4);
+    transform: translateY(0);
+    transition: transform 0.08s, box-shadow 0.08s;
+    letter-spacing: 0.04em;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.shoot-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #8a5a00, 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.shoot-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: translateY(0);
+}
